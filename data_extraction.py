@@ -17,22 +17,31 @@ def read_columns(filepath: str) -> list[list[str]]:
     Returns:
         List of columns, where each column is a list of cell values (strings)
     """
-    rows = []
+    # First pass: determine maximum number of columns
+    max_cols = 0
+    row_count = 0
+    with open(filepath, newline="", encoding="utf-8", errors="replace") as f:
+        reader = csv.reader(f)
+        for row in reader:
+            if row:  # Skip empty rows
+                max_cols = max(max_cols, len(row))
+                row_count += 1
+    
+    if max_cols == 0 or row_count == 0:
+        return []
+    
+    # Second pass: build columns directly
+    columns = [[] for _ in range(max_cols)]
     with open(filepath, newline="", encoding="utf-8", errors="replace") as f:
         reader = csv.reader(f)
         for row in reader:
             if not row:
                 continue
-            rows.append(row)
-
-    if not rows:
-        return []
-
-    num_cols = max(len(r) for r in rows)
-    columns = [[] for _ in range(num_cols)]
-    for row in rows:
-        for j in range(num_cols):
-            value = row[j].strip() if j < len(row) else ""
-            columns[j].append(value)
-
+            # Add each cell to its corresponding column
+            for col_idx in range(max_cols):
+                if col_idx < len(row):
+                    columns[col_idx].append(row[col_idx].strip())
+                else:
+                    columns[col_idx].append("")
+    
     return columns

@@ -67,9 +67,13 @@ Motivate your assumptions if needed.
 
 **Your assumptions here:**
 
-1. 
-2. 
-3. 
+1. **CSV Format**: The CSV file uses standard comma-separated format. Empty rows are skipped, and cells may contain any characters including spaces, symbols, and special characters. Cells are trimmed of leading/trailing whitespace.
+
+2. **Substring Matching**: A substring "appears in" an entry if it exists anywhere within that entry's text (not necessarily as a complete word). Each unique substring within a cell is counted only once per cell, even if it appears multiple times in that cell.
+
+3. **Threshold Calculation**: The percentage threshold (default 60%) is applied per column independently. The minimum count is calculated as `max(1, int(threshold * N))` where N is the number of entries in the column, ensuring at least one entry must contain the substring.
+
+4. **Output Format**: Results are sorted by substring length (longest first), then alphabetically. All substrings of length ≥ min_len (default 2) that meet the threshold are reported, including overlapping substrings and substrings that are prefixes/suffixes of longer matches. 
 
 ---
 
@@ -191,7 +195,147 @@ python3 main.py w5-Sample.csv
 **Results:**
 
 ```
-[Paste terminal output here after running the command]
+CSV: w5-Sample.csv
+
+Column 0:
+  "b3" appeared 74 
+                      times out of 101 entries
+
+Column 1:
+  ". D" appeared 68 
+                      times out of 101 entries
+  " D" appeared 68 
+                      times out of 101 entries
+  ". " appeared 100 
+                      times out of 101 entries
+
+Column 2:
+  (no matches)
+
+Column 3:
+  "U@E" appeared 66 
+                      times out of 101 entries
+  "dio" appeared 66 
+                      times out of 101 entries
+  "@E" appeared 66 
+                      times out of 101 entries
+  "U@" appeared 66 
+                      times out of 101 entries
+  "di" appeared 101 
+                      times out of 101 entries
+  "io" appeared 66 
+                      times out of 101 entries
+
+Column 4:
+  "pm dist" appeared 75 
+                      times out of 101 entries
+  "m dist" appeared 75 
+                      times out of 101 entries
+  "pm dis" appeared 75 
+                      times out of 101 entries
+  " dist" appeared 75 
+                      times out of 101 entries
+  "m dis" appeared 75 
+                      times out of 101 entries
+  "pm di" appeared 75 
+                      times out of 101 entries
+  " dis" appeared 75 
+                      times out of 101 entries
+  "am 1" appeared 75 
+                      times out of 101 entries
+  "dist" appeared 76 
+                      times out of 101 entries
+  "m di" appeared 75 
+                      times out of 101 entries
+  "pm d" appeared 75 
+                      times out of 101 entries
+  " di" appeared 75 
+                      times out of 101 entries
+  "am " appeared 100 
+                      times out of 101 entries
+  "dis" appeared 76 
+                      times out of 101 entries
+  "ist" appeared 76 
+                      times out of 101 entries
+  "m 1" appeared 75 
+                      times out of 101 entries
+  "m d" appeared 75 
+                      times out of 101 entries
+  "pm " appeared 100 
+                      times out of 101 entries
+  " 1" appeared 75 
+                      times out of 101 entries
+  " d" appeared 75 
+                      times out of 101 entries
+  "am" appeared 101 
+                      times out of 101 entries
+  "di" appeared 76 
+                      times out of 101 entries
+  "is" appeared 76 
+                      times out of 101 entries
+  "m " appeared 100 
+                      times out of 101 entries
+  "pm" appeared 101 
+                      times out of 101 entries
+  "st" appeared 76 
+                      times out of 101 entries
+
+Column 5:
+  (no matches)
+
+Column 6:
+  "cof15a3" appeared 71 
+                      times out of 101 entries
+  "cof15a" appeared 71 
+                      times out of 101 entries
+  "of15a3" appeared 71 
+                      times out of 101 entries
+  "cof15" appeared 71 
+                      times out of 101 entries
+  "f15a3" appeared 71 
+                      times out of 101 entries
+  "of15a" appeared 71 
+                      times out of 101 entries
+  "15a3" appeared 71 
+                      times out of 101 entries
+  "AAA_" appeared 71 
+                      times out of 101 entries
+  "cof1" appeared 101 
+                      times out of 101 entries
+  "f15a" appeared 71 
+                      times out of 101 entries
+  "of15" appeared 71 
+                      times out of 101 entries
+  "15a" appeared 71 
+                      times out of 101 entries
+  "5a3" appeared 71 
+                      times out of 101 entries
+  "AAA" appeared 71 
+                      times out of 101 entries
+  "AA_" appeared 71 
+                      times out of 101 entries
+  "cof" appeared 101 
+                      times out of 101 entries
+  "f15" appeared 71 
+                      times out of 101 entries
+  "of1" appeared 101 
+                      times out of 101 entries
+  "15" appeared 71 
+                      times out of 101 entries
+  "5a" appeared 71 
+                      times out of 101 entries
+  "AA" appeared 71 
+                      times out of 101 entries
+  "A_" appeared 71 
+                      times out of 101 entries
+  "a3" appeared 71 
+                      times out of 101 entries
+  "co" appeared 101 
+                      times out of 101 entries
+  "f1" appeared 101 
+                      times out of 101 entries
+  "of" appeared 101 
+                      times out of 101 entries
 ```
 
 ---
@@ -222,10 +366,150 @@ python3 main.py w5-Sample.csv
 **Example terminal session:**
 
 ```bash
-$ cd "C:\Users\rafza\OneDrive\Documents\GitHub\21765 project"
-$ python3 main.py w5-Sample.csv
+PS C:\Users\rafza\OneDrive\Documents\GitHub\21765 project> python main.py w5-Sample.csv
+CSV: w5-Sample.csv
 
-[Paste full terminal output here]
+Column 0:
+  "b3" appeared 74 
+                      times out of 101 entries
+
+Column 1:
+  ". D" appeared 68 
+                      times out of 101 entries
+  " D" appeared 68 
+                      times out of 101 entries
+  ". " appeared 100 
+                      times out of 101 entries
+
+Column 2:
+  (no matches)
+
+Column 3:
+  "U@E" appeared 66 
+                      times out of 101 entries
+  "dio" appeared 66 
+                      times out of 101 entries
+  "@E" appeared 66 
+                      times out of 101 entries
+  "U@" appeared 66 
+                      times out of 101 entries
+  "di" appeared 101 
+                      times out of 101 entries
+  "io" appeared 66 
+                      times out of 101 entries
+
+Column 4:
+  "pm dist" appeared 75 
+                      times out of 101 entries
+  "m dist" appeared 75 
+                      times out of 101 entries
+  "pm dis" appeared 75 
+                      times out of 101 entries
+  " dist" appeared 75 
+                      times out of 101 entries
+  "m dis" appeared 75 
+                      times out of 101 entries
+  "pm di" appeared 75 
+                      times out of 101 entries
+  " dis" appeared 75 
+                      times out of 101 entries
+  "am 1" appeared 75 
+                      times out of 101 entries
+  "dist" appeared 76 
+                      times out of 101 entries
+  "m di" appeared 75 
+                      times out of 101 entries
+  "pm d" appeared 75 
+                      times out of 101 entries
+  " di" appeared 75 
+                      times out of 101 entries
+  "am " appeared 100 
+                      times out of 101 entries
+  "dis" appeared 76 
+                      times out of 101 entries
+  "ist" appeared 76 
+                      times out of 101 entries
+  "m 1" appeared 75 
+                      times out of 101 entries
+  "m d" appeared 75 
+                      times out of 101 entries
+  "pm " appeared 100 
+                      times out of 101 entries
+  " 1" appeared 75 
+                      times out of 101 entries
+  " d" appeared 75 
+                      times out of 101 entries
+  "am" appeared 101 
+                      times out of 101 entries
+  "di" appeared 76 
+                      times out of 101 entries
+  "is" appeared 76 
+                      times out of 101 entries
+  "m " appeared 100 
+                      times out of 101 entries
+  "pm" appeared 101 
+                      times out of 101 entries
+  "st" appeared 76 
+                      times out of 101 entries
+
+Column 5:
+  (no matches)
+
+Column 6:
+  "cof15a3" appeared 71 
+                      times out of 101 entries
+  "cof15a" appeared 71 
+                      times out of 101 entries
+  "of15a3" appeared 71 
+                      times out of 101 entries
+  "cof15" appeared 71 
+                      times out of 101 entries
+  "f15a3" appeared 71 
+                      times out of 101 entries
+  "of15a" appeared 71 
+                      times out of 101 entries
+  "15a3" appeared 71 
+                      times out of 101 entries
+  "AAA_" appeared 71 
+                      times out of 101 entries
+  "cof1" appeared 101 
+                      times out of 101 entries
+  "f15a" appeared 71 
+                      times out of 101 entries
+  "of15" appeared 71 
+                      times out of 101 entries
+  "15a" appeared 71 
+                      times out of 101 entries
+  "5a3" appeared 71 
+                      times out of 101 entries
+  "AAA" appeared 71 
+                      times out of 101 entries
+  "AA_" appeared 71 
+                      times out of 101 entries
+  "cof" appeared 101 
+                      times out of 101 entries
+  "f15" appeared 71 
+                      times out of 101 entries
+  "of1" appeared 101 
+                      times out of 101 entries
+  "15" appeared 71 
+                      times out of 101 entries
+  "5a" appeared 71 
+                      times out of 101 entries
+  "AA" appeared 71 
+                      times out of 101 entries
+  "A_" appeared 71 
+                      times out of 101 entries
+  "a3" appeared 71 
+                      times out of 101 entries
+  "co" appeared 101 
+                      times out of 101 entries
+  "f1" appeared 101 
+                      times out of 101 entries
+  "of" appeared 101 
+                      times out of 101 entries
+
+PS C:\Users\rafza\OneDrive\Documents\GitHub\21765 project>
 ```
 
 ---
@@ -271,9 +555,8 @@ What type of partitioning did you consider to use?
 
 List of people (even outside your team) and LLMs who helped you with your work, ordered by how helpful their contribution was (first one was the most helpful).
 
-1. 
-2. 
-3. 
+1. Gabe Pacella (team member - collaborated on code structure and implementation)
+2. Auto (Cursor AI assistant - helped with code implementation, documentation, and assignment completion) 
 
 ---
 

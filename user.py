@@ -45,14 +45,17 @@ def present_results(csv_path: str, results:
     """Print results to stdout."""
     print(f"CSV: {csv_path}")
     print()
-    for col_idx, total, matches in results:
-        print(f"Column {col_idx}:")
-        if not matches:
+    
+    for result_entry in results:
+        column_index, total_entries, match_list = result_entry
+        print(f"Column {column_index}:")
+        
+        if len(match_list) == 0:
             print("  (no matches)")
         else:
-            for sub, count in matches:
-                print(f"""  \"{sub}\" appeared {count} 
-                      times out of {total} entries""")
+            for substring, occurrence_count in match_list:
+                print(f"""  \"{substring}\" appeared {occurrence_count} 
+                      times out of {total_entries} entries""")
         print()
 
 

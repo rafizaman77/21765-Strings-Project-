@@ -37,27 +37,41 @@ def find_matching_substrings(
     # For each length L, count how many entries contain each substring of length L
     results = []
 
-    max_len = max(len(cell) for cell in column)
-    for length in range(min_len, max_len + 1):
-        # substring -> number of entries that contain it
-        containment_count = defaultdict(int)
-        for cell in column:
-            seen_this_cell = set()
-            for start in range(len(cell) - length + 1):
-                sub = cell[start : start + length]
-                if sub not in seen_this_cell:
-                    seen_this_cell.add(sub)
-                    containment_count[sub] += 1
+    # Find the maximum cell length to determine search range
+    cell_lengths = [len(cell) for cell in column]
+    max_cell_length = max(cell_lengths) if cell_lengths else 0
+    
+    # Process each substring length from minimum to maximum
+    for substring_length in range(min_len, max_cell_length + 1):
+        # Track how many entries contain each substring
+        entry_containment = defaultdict(int)
+        
+        for cell_value in column:
+            # Track unique substrings per cell to avoid double counting
+            cell_substrings = set()
+            cell_length = len(cell_value)
+            
+            # Extract all substrings of current length from this cell
+            for start_pos in range(cell_length - substring_length + 1):
+                extracted_substring = cell_value[start_pos : start_pos + substring_length]
+                if extracted_substring not in cell_substrings:
+                    cell_substrings.add(extracted_substring)
+                    entry_containment[extracted_substring] += 1
 
-        for sub, count in containment_count.items():
-            if count >= min_count:
-                results.append((sub, count))
+        # Collect substrings that meet the threshold
+        for substring, entry_count in entry_containment.items():
+            if entry_count >= min_count:
+                results.append((substring, entry_count))
 
     # Deduplicate by substring (same substring can qualify at multiple lengths)
-    seen = {}
-    for sub, count in results:
-        if sub not in seen:
-            seen[sub] = count
-    results = [(sub, seen[sub]) for sub in sorted(seen.keys(), key=lambda s: (-len(s), s))]
+    # Use a dictionary to track unique substrings and their counts
+    unique_matches = {}
+    for substring, occurrence_count in results:
+        if substring not in unique_matches or occurrence_count > unique_matches[substring]:
+            unique_matches[substring] = occurrence_count
+    
+    # Convert to list and sort: longest first, then alphabetically
+    final_results = [(sub, unique_matches[sub]) for sub in unique_matches]
+    final_results.sort(key=lambda x: (-len(x[0]), x[0]))
 
-    return results
+    return final_results

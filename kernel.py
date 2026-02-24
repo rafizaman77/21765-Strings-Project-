@@ -26,9 +26,12 @@ def run(csv_path: str, threshold: float,
     if not columns:
         return []
 
+    # Process each column and collect results
     results = []
-    for col_idx, column in enumerate(columns):
-        matches = find_matching_substrings(column, threshold, min_len)
-        results.append((col_idx, len(column), matches))
+    for column_index in range(len(columns)):
+        column_data = columns[column_index]
+        column_matches = find_matching_substrings(column_data, threshold, min_len)
+        entry_count = len(column_data)
+        results.append((column_index, entry_count, column_matches))
 
     return results
